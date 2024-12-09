@@ -1,0 +1,49 @@
+{
+  "name": "videa-ppdb-admin",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.3",
+    "axios": "^1.7.7",
+    "class-transformer": "^0.5.1",
+    "moment": "^2.30.1",
+    "overlayscrollbars": "^2.10.1",
+    "overlayscrollbars-react": "^0.5.6",
+    "react": "^18.3.1",
+    "react-charts": "^3.0.0-beta.57",
+    "react-cookie": "^7.2.2",
+    "react-dom": "^18.3.1",
+    "react-dropzone": "^14.3.5",
+    "react-hook-form": "^7.53.2",
+    "react-icons": "^5.3.0",
+    "react-number-format": "^5.4.2",
+    "react-router-dom": "^6.28.0",
+    "react-select": "^5.8.3",
+    "reactjs-popup": "^2.0.6",
+    "reflect-metadata": "^0.2.2",
+    "sweetalert2": "^11.14.5",
+    "sweetalert2-react-content": "^5.0.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.13.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "globals": "^15.11.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.11.0",
+    "vite": "^5.4.10"
+  }
+}
