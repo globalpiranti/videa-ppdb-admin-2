@@ -210,6 +210,12 @@ export default function PathDetail() {
           message={errors.name?.message}
           {...register("name", { required: "Tidak boleh kosong" })}
         />
+        <TextInput
+          label="Ketentuan Gelombang"
+          containerClassName="mb-5"
+          message={errors.provision?.message}
+          {...register("provision", { required: "Tidak boleh kosong" })}
+        />
         <Controller
           control={control}
           name="quota"

@@ -8,6 +8,9 @@ export default class Wave extends Base {
   name!: string;
 
   @Expose()
+  provision!: string;
+
+  @Expose()
   quota!: number;
 
   @Expose()

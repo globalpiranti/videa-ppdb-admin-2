@@ -8,6 +8,9 @@ export default class Path extends Base {
   name!: string;
 
   @Expose()
+  description!: string;
+
+  @Expose()
   @Type(() => Date)
   @Transform(({ value }) => moment(value), { toClassOnly: true })
   startedAt!: Moment;

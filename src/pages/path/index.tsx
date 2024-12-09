@@ -192,6 +192,14 @@ export default function Path() {
             required: "Tidak boleh kosong",
           })}
         />
+        <TextInput
+          containerClassName="mb-5"
+          label="Deskripsi Jalur"
+          message={errors.description?.message}
+          {...register("description", {
+            required: "Tidak boleh kosong",
+          })}
+        />
         <Controller
           control={control}
           name="form"
