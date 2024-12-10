@@ -8,7 +8,7 @@ type ButtonProps = {
 };
 
 const sizes = ["sm", "base"] as const;
-const color = ["primary", "danger", "white", "success"] as const;
+const color = ["primary", "danger", "white", "success", "dark"] as const;
 
 const sizingStyles: Record<(typeof sizes)[number], string> = {
   sm: "h-10 px-3 text-sm space-x-2",
@@ -20,6 +20,7 @@ const coloringStyles: Record<(typeof color)[number], string> = {
   danger: "bg-danger-600 text-white",
   success: "bg-success-600 text-white",
   white: "bg-white text-neutral-800",
+  dark: "bg-neutral-800 text-white",
 };
 
 export default function Button({

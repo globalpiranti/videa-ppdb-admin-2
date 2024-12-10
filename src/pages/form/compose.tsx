@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { IconType } from "react-icons";
-import { CgAdd } from "react-icons/cg";
+import { CgAdd, CgChevronRight } from "react-icons/cg";
 import {
   PiCalendarFill,
   PiCheckSquareFill,
@@ -35,6 +35,7 @@ import useModal from "../../hooks/modal";
 import useSwal from "../../hooks/swal";
 import * as FormType from "../../utils/form";
 import { TextTypeMap } from "../../utils/text_type";
+import template from "../../template";
 
 const defaultDetailValue: Partial<Form["forms"][number]> = {
   label: "",
@@ -106,11 +107,13 @@ export default function ComposeForm() {
   const swal = useSwal();
   const [saved, setSaved] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const templates = useMemo(() => template, []);
 
   const [dragged, setDragged] = useState<number>();
   const [dropTarget, setDropTarget] = useState<number>();
 
   const typeModal = useModal<number>();
+  const templateModal = useModal<number>();
   const formModal = useModal<number>();
 
   const getFormApi = useApi(getForm);
@@ -124,6 +127,7 @@ export default function ComposeForm() {
     formState: { errors },
     reset,
     watch,
+    setValue,
   } = useForm({
     defaultValues: new Form(),
   });
@@ -241,11 +245,20 @@ export default function ComposeForm() {
         </div>
         <div className="flex-1">
           <div className="bg-white border border-neutral-300 rounded overflow-hidden">
-            <div className="h-16 px-5 border-b border-neutral-300 bg-neutral-50 flex justify-start items-center space-x-3">
+            <div className="h-16 px-5 border-b border-neutral-300 bg-neutral-50 flex justify-start items-center space-x-2">
               <RiPagesLine className="text-primary-500" />
               <h2 className="flex-1 font-semibold font-montserrat text-neutral-900">
                 Desain Formulir
               </h2>
+              <Button
+                sizing="sm"
+                coloring="dark"
+                onClick={() => {
+                  templateModal.control.show();
+                }}
+              >
+                Template
+              </Button>
               <Button
                 sizing="sm"
                 onClick={() => {
@@ -499,6 +512,26 @@ export default function ComposeForm() {
             typeModal.control.hide();
           }}
         />
+      </Modal>
+      <Modal
+        title="Pilih Template"
+        icon={RiPagesFill}
+        control={templateModal.control}
+      >
+        {templates.map((item, index) => (
+          <button
+            key={`${index}`}
+            type="button"
+            onClick={() => {
+              setValue("forms", item.forms);
+              templateModal.control.hide();
+            }}
+            className="flex justify-start items-center py-4 border-b border-neutral-200 w-full text-left"
+          >
+            <span className="flex-1 font-ubuntu font-medium">{item.name}</span>
+            <CgChevronRight className="text-neutral-600 text-xl" />
+          </button>
+        ))}
       </Modal>
     </>
   );
