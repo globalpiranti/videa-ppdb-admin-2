@@ -1,4 +1,6 @@
+import moment from "moment/min/moment-with-locales";
 import { useEffect, useMemo } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { CgAddR, CgSearch } from "react-icons/cg";
 import {
   RiCheckFill,
@@ -6,28 +8,27 @@ import {
   RiEditBoxLine,
   RiGitBranchFill,
 } from "react-icons/ri";
+import { listForm } from "../../api/endpoints/form";
 import {
   createPath,
   deletePath,
   listPath,
   updatePath,
 } from "../../api/endpoints/path";
+import { default as PathModel } from "../../api/models/path";
 import Button from "../../components/button";
 import ContextLink from "../../components/context_link";
 import DateInput from "../../components/date_input";
 import List from "../../components/list";
 import Modal, { ModalFooter } from "../../components/modal";
 import NotFound from "../../components/not_found";
+import SelectInput from "../../components/select_input";
 import TextInput from "../../components/text_input";
+import TextareaInput from "../../components/textarea_input";
 import useApi from "../../hooks/api";
 import useLayout from "../../hooks/layout";
 import useModal from "../../hooks/modal";
-import { Controller, useForm } from "react-hook-form";
-import { default as PathModel } from "../../api/models/path";
-import moment from "moment/min/moment-with-locales";
 import useSwal from "../../hooks/swal";
-import { listForm } from "../../api/endpoints/form";
-import SelectInput from "../../components/select_input";
 
 export default function Path() {
   const { setActive, setTitle } = useLayout();
@@ -192,7 +193,7 @@ export default function Path() {
             required: "Tidak boleh kosong",
           })}
         />
-        <TextInput
+        <TextareaInput
           containerClassName="mb-5"
           label="Deskripsi Jalur"
           message={errors.description?.message}

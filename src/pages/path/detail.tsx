@@ -31,6 +31,7 @@ import useSwal from "../../hooks/swal";
 import List from "../../components/list";
 import { NumericFormat } from "react-number-format";
 import ContextLink from "../../components/context_link";
+import TextareaInput from "../../components/textarea_input";
 
 export default function PathDetail() {
   const { setActive, setTitle } = useLayout();
@@ -210,7 +211,7 @@ export default function PathDetail() {
           message={errors.name?.message}
           {...register("name", { required: "Tidak boleh kosong" })}
         />
-        <TextInput
+        <TextareaInput
           label="Ketentuan Gelombang"
           containerClassName="mb-5"
           message={errors.provision?.message}
