@@ -12,6 +12,8 @@ import Enrollment from "./pages/enrollment";
 import EnrollmentDetail from "./pages/enrollment/detail";
 import PaymentChannel from "./pages/payment-channel";
 import Card from "./pages/card";
+import SendEmail from "./pages/reset-password/send-email";
+import ResetPassword from "./pages/reset-password";
 
 export const router = createBrowserRouter(
   [
@@ -84,6 +86,14 @@ export const router = createBrowserRouter(
           element: <PaymentChannel />,
         },
       ],
+    },
+    {
+      path: "/forgot-password",
+      element: <SendEmail />,
+    },
+    {
+      path: "/reset-password",
+      element: <ResetPassword />,
     },
   ],
   {

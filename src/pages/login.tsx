@@ -9,7 +9,7 @@ import useApi from "../hooks/api";
 import useSwal from "../hooks/swal";
 import { useCookies } from "react-cookie";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const swal = useSwal();
@@ -90,6 +90,9 @@ export default function Login() {
                 Masuk
               </Button>
             </form>
+            <div className="mt-4 flex justify-end">
+              <Link to="/forgot-password">Lupa Password?</Link>
+            </div>
           </div>
         </div>
       </div>
