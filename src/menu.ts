@@ -1,4 +1,6 @@
 import { IconType } from "react-icons";
+import { FaRegUserCircle } from "react-icons/fa";
+import { MdOutlineAnnouncement } from "react-icons/md";
 import {
   RiAppsLine,
   RiBankCard2Line,
@@ -44,6 +46,16 @@ const menus: (Menu & LinkProps)[] = [
     title: "Metode Pembayaran",
     icon: RiBankCard2Line,
     to: "/payment-channel",
+  },
+  {
+    title: "Pengumuman",
+    icon: MdOutlineAnnouncement,
+    to: "/announcement",
+  },
+  {
+    title: "Pengguna",
+    icon: FaRegUserCircle,
+    to: "/user",
   },
 ];
 

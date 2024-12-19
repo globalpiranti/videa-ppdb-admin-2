@@ -7,9 +7,11 @@ import useApi from "../../hooks/api";
 import { sendLinkResetPass } from "../../api/endpoints/reset-password";
 import useSwal from "../../hooks/swal";
 import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function SendEmail() {
   const sendEmailApi = useApi(sendLinkResetPass);
+  const navigate = useNavigate();
 
   const swal = useSwal();
   const { register, handleSubmit } = useForm({
@@ -26,6 +28,7 @@ export default function SendEmail() {
           text: `Periksa email ${user.email} untuk melanjutkan reset password`,
           icon: "success",
         });
+        navigate("/login");
       })
       .catch((err) => {
         swal({

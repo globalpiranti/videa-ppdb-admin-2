@@ -29,7 +29,7 @@ const statusMap: Record<
   },
   REJECTED: {
     className: "border-danger-600 text-danger-600 bg-danger-50",
-    as: "DITOLAK",
+    as: "DITUNDA",
   },
   UNPAID: {
     className: "border-warning-600 text-warning-600 bg-warning-50",

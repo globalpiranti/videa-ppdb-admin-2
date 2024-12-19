@@ -23,7 +23,7 @@ export const statusMap: Record<
   },
   REJECTED: {
     color: "text-danger-600",
-    as: "DITOLAK",
+    as: "DITUNDA",
   },
   UNPAID: {
     color: "text-warning-700",

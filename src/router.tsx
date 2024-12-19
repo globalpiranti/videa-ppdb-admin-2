@@ -14,6 +14,8 @@ import PaymentChannel from "./pages/payment-channel";
 import Card from "./pages/card";
 import SendEmail from "./pages/reset-password/send-email";
 import ResetPassword from "./pages/reset-password";
+import Announcement from "./pages/announcement";
+import User from "./pages/user";
 
 export const router = createBrowserRouter(
   [
@@ -84,6 +86,14 @@ export const router = createBrowserRouter(
         {
           path: "payment-channel",
           element: <PaymentChannel />,
+        },
+        {
+          path: "announcement",
+          element: <Announcement />,
+        },
+        {
+          path: "user",
+          element: <User />,
         },
       ],
     },

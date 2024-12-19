@@ -27,7 +27,7 @@ export const deleteForm = (id: string) =>
 
 export const createForm = (data: Form) =>
   client
-    .post("/form", instanceToPlain(data))
+    .post("/form", data)
     .then(({ data }) =>
       plainToInstance(Form, data, { excludeExtraneousValues: true })
     );

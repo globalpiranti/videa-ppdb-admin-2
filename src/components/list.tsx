@@ -12,6 +12,7 @@ export default function List({
   popupOptions,
   popup,
   to,
+  onClick,
 }: {
   icon: IconType;
   children: ReactNode;
@@ -22,6 +23,7 @@ export default function List({
   popupOptions?: PopupProps;
   popup?: ReactNode;
   to?: LinkProps["to"];
+  onClick?: () => void;
 }) {
   return (
     <div className="px-5 py-3 border-b border-neutral-300 hover:border-transparent flex justify-start items-center bg-transparent hover:bg-primary-100 relative">
@@ -58,7 +60,11 @@ export default function List({
         </div>
       )}
       {Boolean(to) && (
-        <Link to={to!} className="absolute top-0 left-0 w-full h-full" />
+        <Link
+          onClick={onClick}
+          to={to!}
+          className="absolute top-0 left-0 w-full h-full"
+        />
       )}
     </div>
   );

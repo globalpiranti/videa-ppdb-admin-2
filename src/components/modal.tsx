@@ -38,7 +38,7 @@ export function ModalProvider({ children }: { children?: ReactNode }) {
 
 export function ModalFooter({ children }: { children?: ReactNode }) {
   return (
-    <div className="-mx-5 mt-8 -mb-5 bg-neutral-200 p-5 rounded-b flex sticky -bottom-5 left-0 right-0">
+    <div className="-mx-5 mt-8 -mb-5 bg-neutral-200 p-5 rounded-b flex justify-end sticky -bottom-5 left-0 right-0">
       {children}
     </div>
   );

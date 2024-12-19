@@ -12,5 +12,8 @@ export default class User extends Base {
   email!: string;
 
   @Expose()
+  password?: string;
+
+  @Expose()
   token?: string;
 }
