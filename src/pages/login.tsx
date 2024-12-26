@@ -72,7 +72,7 @@ export default function Login() {
               <TextInput
                 containerClassName="mb-5"
                 left={() => <BiUser className="text-lg" />}
-                placeholder="Email / No. Handphone"
+                placeholder="Email"
                 {...register("username", { required: true })}
               />
               <TextInput

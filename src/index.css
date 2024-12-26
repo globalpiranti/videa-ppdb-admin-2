@@ -97,3 +97,8 @@ body {
     box-shadow: 60px 15px, 60px 15px, 60px 15px;
   }
 }
+
+.custom-checkbox {
+  accent-color: #1e7898;
+  cursor: pointer;
+}

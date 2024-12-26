@@ -13,7 +13,9 @@ import {
 import {
   RiCheckFill,
   RiDeleteBin2Line,
+  RiDeleteBin5Line,
   RiEditBoxFill,
+  RiEditBoxLine,
   RiInformation2Line,
   RiPagesFill,
   RiPagesLine,
@@ -36,6 +38,15 @@ import useSwal from "../../hooks/swal";
 import * as FormType from "../../utils/form";
 import { TextTypeMap } from "../../utils/text_type";
 import template from "../../template";
+import Category from "./compose-category";
+import {
+  deleteFormCategory,
+  formCategories,
+} from "../../api/endpoints/form_category";
+import Popup from "reactjs-popup";
+import { BiDotsVertical } from "react-icons/bi";
+import ContextLink from "../../components/context_link";
+import FormCategory from "../../api/models/form_category";
 
 const defaultDetailValue: Partial<Form["forms"][number]> = {
   label: "",
@@ -46,7 +57,7 @@ const defaultDetailValue: Partial<Form["forms"][number]> = {
   required: false,
 };
 
-const FormInputMap: Record<string, { icon: IconType; name: string }> = {
+export const FormInputMap: Record<string, { icon: IconType; name: string }> = {
   calendar: {
     icon: PiCalendarFill,
     name: "Kolom Tanggal",
@@ -103,11 +114,13 @@ const FormInput = ({
 export default function ComposeForm() {
   const { id } = useParams();
   const { setActive, setTitle } = useLayout();
+  const [category, setCategory] = useState<FormCategory | undefined>(undefined);
   const navigate = useNavigate();
   const swal = useSwal();
   const [saved, setSaved] = useState(false);
   const [mounted, setMounted] = useState(false);
   const templates = useMemo(() => template, []);
+  const [categories, setCategories] = useState<FormCategory[]>([]);
 
   const [dragged, setDragged] = useState<number>();
   const [dropTarget, setDropTarget] = useState<number>();
@@ -117,8 +130,11 @@ export default function ComposeForm() {
   const formModal = useModal<number>();
 
   const getFormApi = useApi(getForm);
+
   const createFormApi = useApi(createForm);
   const updateFormApi = useApi(updateForm);
+  const getCategoriesApi = useApi(formCategories);
+  const deleteCategoryApi = useApi(deleteFormCategory);
 
   const {
     register,
@@ -196,6 +212,12 @@ export default function ComposeForm() {
 
           return data;
         });
+
+        await getCategoriesApi({ formId: id }).then((data) => {
+          setCategories(data);
+
+          return data;
+        });
       }
     })();
   }, [id]);
@@ -211,6 +233,36 @@ export default function ComposeForm() {
     });
     return () => unsubscribe();
   }, [watch, mounted]);
+
+  const refetchCategory = () => {
+    getCategoriesApi({ formId: id! })
+      .then((data) => {
+        setCategories(data);
+      })
+      .catch(() => {});
+
+    return getCategoriesApi.loading;
+  };
+
+  const onDeleteCategory = (id: string) => {
+    swal({
+      title: "Hapus Kategori?",
+      text: "Anda akan menghapus kategori form, tindakan ini tidak bisa dibatalkan",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Hapus",
+      customClass: {
+        confirmButton: "!bg-danger-600",
+      },
+    }).then((result) => {
+      if (result.isConfirmed)
+        deleteCategoryApi(id)
+          .then(() => {
+            refetchCategory();
+          })
+          .catch(() => {});
+    });
+  };
 
   if (getFormApi.loading)
     return (
@@ -250,6 +302,13 @@ export default function ComposeForm() {
               <h2 className="flex-1 font-semibold font-montserrat text-neutral-900">
                 Desain Formulir
               </h2>
+              {id && (
+                <Category
+                  category={category}
+                  forms={getFormApi.data?.forms || []}
+                  refetchCategory={refetchCategory}
+                />
+              )}
               <Button
                 sizing="sm"
                 coloring="dark"
@@ -275,60 +334,112 @@ export default function ComposeForm() {
             <div className="py-3">
               {fields.length ? (
                 fields.map((value, index) => (
-                  <div
-                    className="px-5 py-2 grid"
-                    key={`${value.id}`}
-                    draggable
-                    onDragStart={(e) => {
-                      e.dataTransfer.setDragImage(
-                        e.currentTarget.children[0],
-                        28,
-                        0
-                      );
-                      setDragged(index);
-                    }}
-                    onDragEnd={() => setDragged(undefined)}
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      if (dragged !== index) setDropTarget(index);
-                    }}
-                    onDragLeave={(e) => {
-                      e.preventDefault();
-                      setDropTarget(undefined);
-                    }}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      setDragged(undefined);
-                      setDropTarget(undefined);
-                      if (
-                        typeof dragged === "number" &&
-                        typeof dropTarget === "number" &&
-                        dragged >= 0 &&
-                        dropTarget >= 0
-                      )
-                        move(dragged, dropTarget);
-                    }}
-                    onClick={() => {
-                      formModal.state.set(index);
+                  <div key={`${index}`}>
+                    <>
+                      {categories.length > 0 &&
+                        categories.map((category, idx) => {
+                          if (category.formsIndex[0] === index) {
+                            return (
+                              <div key={idx} className="flex justify-between">
+                                <h3 className="px-5 mt-4 text-lg font-semibold text-neutral-900">
+                                  {category.name}:
+                                </h3>
+                                <div className="px-5 items-end w-[10%] flex justify-end">
+                                  <Popup
+                                    trigger={
+                                      <button
+                                        type="button"
+                                        className="p-2 bg-transparent hover:bg-neutral-200 rounded-full relative z-10"
+                                      >
+                                        <BiDotsVertical />
+                                      </button>
+                                    }
+                                    position="left top"
+                                  >
+                                    <>
+                                      <ContextLink
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          setCategory(category);
+                                        }}
+                                        icon={RiEditBoxLine}
+                                        to="/"
+                                      >
+                                        Edit Kategori
+                                      </ContextLink>
+                                      <ContextLink
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          onDeleteCategory(category.id);
+                                        }}
+                                        icon={RiDeleteBin5Line}
+                                        to="/"
+                                      >
+                                        Hapus Kategori
+                                      </ContextLink>
+                                    </>
+                                  </Popup>
+                                </div>
+                              </div>
+                            );
+                          }
+                          return null; // Pastikan untuk mengembalikan null jika kondisi tidak terpenuhi
+                        })}
+                    </>
+                    <div
+                      className="px-5 py-2 grid"
+                      draggable
+                      onDragStart={(e) => {
+                        e.dataTransfer.setDragImage(
+                          e.currentTarget.children[0],
+                          28,
+                          0
+                        );
+                        setDragged(index);
+                      }}
+                      onDragEnd={() => setDragged(undefined)}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        if (dragged !== index) setDropTarget(index);
+                      }}
+                      onDragLeave={(e) => {
+                        e.preventDefault();
+                        setDropTarget(undefined);
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        setDragged(undefined);
+                        setDropTarget(undefined);
+                        if (
+                          typeof dragged === "number" &&
+                          typeof dropTarget === "number" &&
+                          dragged >= 0 &&
+                          dropTarget >= 0
+                        )
+                          move(dragged, dropTarget);
+                      }}
+                      onClick={() => {
+                        formModal.state.set(index);
 
-                      formDetailReset(defaultDetailValue);
-                      formDetailReset(value);
-                      formModal.control.show();
-                    }}
-                  >
-                    <CardButton
-                      type="button"
-                      className={`${
-                        dragged === index ? "opacity-30" : "opacity-100"
-                      } ${
-                        dropTarget === index
-                          ? "!border-primary-500 !bg-primary-100"
-                          : ""
-                      }`}
-                      icon={FormInputMap[value.input].icon}
+                        formDetailReset(defaultDetailValue);
+                        formDetailReset(value);
+                        formModal.control.show();
+                      }}
                     >
-                      {value.label}
-                    </CardButton>
+                      <CardButton
+                        type="button"
+                        className={`${
+                          dragged === index ? "opacity-30" : "opacity-100"
+                        } ${
+                          dropTarget === index
+                            ? "!border-primary-500 !bg-primary-100"
+                            : ""
+                        }`}
+                        icon={FormInputMap[value.input].icon}
+                      >
+                        {value.label}
+                      </CardButton>
+                    </div>
                   </div>
                 ))
               ) : (
