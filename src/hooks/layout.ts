@@ -6,6 +6,10 @@ export const LayoutContext = createContext(
     setTitle: Dispatch<SetStateAction<string | undefined>>;
     active: string;
     setActive: Dispatch<SetStateAction<string>>;
+    needActions: { enroll: number; payment: number };
+    setNeedActions: Dispatch<
+      SetStateAction<{ enroll: number; payment: number }>
+    >;
   }
 );
 

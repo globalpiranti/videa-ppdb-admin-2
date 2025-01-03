@@ -7,42 +7,65 @@ import { LayoutContext } from "../hooks/layout";
 import useUser from "../hooks/user";
 import menus from "../menu";
 import useSwal from "../hooks/swal";
+import { needActionEnrollments } from "../api/endpoints/enrollment";
 import useApi from "../hooks/api";
-import { listPayment } from "../api/endpoints/payment";
-import { listEnrollment } from "../api/endpoints/enrollment";
+import { needActionPayments } from "../api/endpoints/payment";
 
 export default function Layout() {
   const [title, setTitle] = useState<string>();
   const [active, setActive] = useState<string>("Dashboard");
   const { validate, context, logout } = useUser();
-  const listPaymentApi = useApi(listPayment);
-  const listEnrollmentApi = useApi(listEnrollment);
-  const [needAction, setNeedAction] = useState({ enroll: 0, payment: 0 });
+  const listNeedActionEnrollment = useApi(needActionEnrollments);
+  const listNeedActionPayment = useApi(needActionPayments);
+  const [needActions, setNeedActions] = useState({
+    enroll: 0,
+    payment: 0,
+  });
   const swal = useSwal();
 
   useEffect(() => {
     validate().then(() => {
-      listEnrollmentApi({}).then((res) => {
-        setNeedAction({
-          ...needAction,
-          enroll: res.rows.filter((item) => item.status === "SUBMITTED").length,
-        });
-      });
+      listNeedActionEnrollment({})
+        .then((data) => {
+          setNeedActions({
+            ...needActions,
+            enroll: data.length,
+          });
+        })
+        .catch(() => {});
 
-      listPaymentApi({}).then((res) => {
-        setNeedAction({
-          ...needAction,
-          payment: res.filter((item) => item.status === "WAITING_CONFIRMATION")
-            .length,
-        });
-      });
+      listNeedActionPayment({})
+        .then((data) => {
+          setNeedActions({
+            ...needActions,
+            payment: data.length,
+          });
+        })
+        .catch(() => {});
     });
+
+    document.getElementById("root")?.classList.remove("load-portal");
   }, []);
 
-  if (!context.user) return null;
+  if (!context.user)
+    return (
+      <div className="load-portal">
+        <div className="loader"></div>
+        <div style={{ marginTop: 16 }}>Memuat data...</div>
+      </div>
+    );
 
   return (
-    <LayoutContext.Provider value={{ title, setTitle, active, setActive }}>
+    <LayoutContext.Provider
+      value={{
+        title,
+        setTitle,
+        active,
+        setActive,
+        needActions,
+        setNeedActions,
+      }}
+    >
       <div className="min-w-[280px] fixed top-0 left-0 bottom-0 bg-white border-r border-neutral-300 flex flex-col">
         <div className="h-16 border-b border-neutral-300 flex items-center px-5">
           <img src={logo} className="h-8 w-auto" />
@@ -80,21 +103,22 @@ export default function Layout() {
                 {title}
               </span>
 
-              {(title === "Pendaftar" || title === "Pembayaran") &&
-                needAction.enroll !== 0 &&
-                needAction.payment !== 0 && (
+              {((title === "Pendaftar" && needActions.enroll > 0) ||
+                (title === "Pembayaran" && needActions.payment > 0)) && (
+                <>
                   <div
-                    className={`absolute text-sm w-[20px] h-[20px] font-semibold flex justify-center items-center rounded-full top-3 right-3 ${
+                    className={`absolute w-[24px] h-[24px] font-medium flex justify-center items-center rounded-full top-2 right-2 ${
                       title === active
                         ? "text-warning-500 border border-warning-500"
                         : "text-primary-500 border border-primary-500"
                     }`}
                   >
                     {title === "Pembayaran"
-                      ? needAction.payment
-                      : needAction.enroll}
+                      ? needActions.payment
+                      : needActions.enroll}
                   </div>
-                )}
+                </>
+              )}
             </Link>
           ))}
         </div>

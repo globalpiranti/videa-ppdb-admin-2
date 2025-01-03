@@ -36,3 +36,12 @@ export const rejectPayment = ({ notes, id }: { id: string; notes: string }) =>
     .then(({ data }) =>
       plainToInstance(Payment, data, { excludeExtraneousValues: true })
     );
+
+export const needActionPayments = () =>
+  client
+    .get("/payment/list/need-action")
+    .then(({ data }): Payment[] =>
+      (data as unknown[]).map((item) =>
+        plainToInstance(Payment, item, { excludeExtraneousValues: true })
+      )
+    );

@@ -38,7 +38,7 @@ const statusMap: Record<
 };
 
 export default function PaymentDetail() {
-  const { setActive, setTitle } = useLayout();
+  const { setActive, setTitle, setNeedActions } = useLayout();
   const { id } = useParams();
   const swal = useSwal();
 
@@ -60,6 +60,12 @@ export default function PaymentDetail() {
         confirmPaymentApi(id!)
           .then(() => {
             getPaymentApi(id!).catch(() => {});
+            setNeedActions((prev) => {
+              return {
+                ...prev,
+                enroll: prev.enroll !== 0 ? prev.enroll - 1 : 0,
+              };
+            });
           })
           .catch(() => {});
     });
@@ -70,6 +76,12 @@ export default function PaymentDetail() {
       .then(() => {
         getPaymentApi(id!).catch(() => {});
         rejectModal.control.hide();
+        setNeedActions((prev) => {
+          return {
+            ...prev,
+            enroll: prev.enroll !== 0 ? prev.enroll - 1 : 0,
+          };
+        });
       })
       .catch(() => {});
   };

@@ -16,6 +16,7 @@ import useSwal from "../../hooks/swal";
 export default function EnrollmentDetail() {
   const { setActive, setTitle } = useLayout();
   const { id } = useParams();
+  const { setNeedActions } = useLayout();
   const swal = useSwal();
 
   const getEnrollmentApi = useApi(getEnrollment);
@@ -54,7 +55,15 @@ export default function EnrollmentDetail() {
     <>
       <div className="p-5 bg-white border-b border-neutral-300 flex justify-start items-center space-x-5">
         <div className="w-16 h-16 bg-neutral-300 rounded flex justify-center items-center text-4xl border border-neutral-400">
-          <BiUser />
+          {getEnrollmentApi.data?.avatar ? (
+            <img
+              src={getEnrollmentApi.data?.avatar}
+              className="w-full h-full object-cover"
+              alt=""
+            />
+          ) : (
+            <BiUser />
+          )}
         </div>
         <div className="flex-1">
           <div className="font-bold text-xl text-neutral-900 font-ubuntu">
@@ -79,7 +88,15 @@ export default function EnrollmentDetail() {
                 }
                 sizing="sm"
                 left={() => <BiX className="text-lg" />}
-                onClick={() => updateAcceptance(false)}
+                onClick={() => {
+                  updateAcceptance(false);
+                  setNeedActions((prev) => {
+                    return {
+                      ...prev,
+                      enroll: prev.enroll !== 0 ? prev.enroll - 1 : 0,
+                    };
+                  });
+                }}
                 disabled={getEnrollmentApi.data?.status === "REJECTED"}
               >
                 Belum Diterima
@@ -93,7 +110,15 @@ export default function EnrollmentDetail() {
                 }
                 sizing="sm"
                 left={() => <BiCheck className="text-lg" />}
-                onClick={() => updateAcceptance(true)}
+                onClick={() => {
+                  updateAcceptance(true);
+                  setNeedActions((prev) => {
+                    return {
+                      ...prev,
+                      enroll: prev.enroll !== 0 ? prev.enroll - 1 : 0,
+                    };
+                  });
+                }}
                 disabled={getEnrollmentApi.data?.status === "ACCEPTED"}
               >
                 Diterima

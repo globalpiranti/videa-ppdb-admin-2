@@ -10,6 +10,7 @@ export type EnrollmentParams = {
   status?: string;
   skip?: number;
   take?: number;
+  token?: string;
 };
 
 export const listEnrollment = ({
@@ -52,4 +53,13 @@ export const rejectEnrollment = (id: string) =>
     .patch(`/enrollment/${id}/reject`)
     .then(({ data }) =>
       plainToInstance(Enrollment, data, { excludeExtraneousValues: true })
+    );
+
+export const needActionEnrollments = () =>
+  client
+    .get("/enrollment/list/need-action")
+    .then(({ data }): Enrollment[] =>
+      (data as unknown[]).map((item) =>
+        plainToInstance(Enrollment, item, { excludeExtraneousValues: true })
+      )
     );

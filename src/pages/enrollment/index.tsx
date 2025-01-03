@@ -19,6 +19,7 @@ import { Controller, useForm } from "react-hook-form";
 import Button from "../../components/button";
 import { listWave } from "../../api/endpoints/wave";
 import ReactPaginate from "react-paginate";
+import { FaFileDownload } from "react-icons/fa";
 
 export type PresentationProps = {
   value: EnrollmentModel["form"][number]["value"];
@@ -30,7 +31,7 @@ export const presentationMap: Record<
 > = {
   upload: ({ value }) => (
     <a
-      href={(value as Attachment).url}
+      href={(value as Attachment)?.url}
       target="_blank"
       className="text-info-600 flex items-center space-x-2"
     >
@@ -47,21 +48,24 @@ export const presentationMap: Record<
 
 export default function Enrollment() {
   const { setActive, setTitle } = useLayout();
-  const listPathApi = useApi(listPath);
-  const listEnrollmentApi = useApi(listEnrollment);
-  const listWavesApi = useApi(listWave);
   const take = 20;
   const [currentPage, setCurrentPage] = useState(1);
   const tableRef = useRef<HTMLDivElement | null>(null);
 
-  const { control, reset, handleSubmit, setValue } = useForm<EnrollmentParams>({
-    defaultValues: {
-      search: "",
-      path: "",
-      wave: "",
-      status: "",
-    },
-  });
+  const listPathApi = useApi(listPath);
+  const listEnrollmentApi = useApi(listEnrollment);
+  const listWavesApi = useApi(listWave);
+  // const downloadSheetApi = useApi(getEnrollmentSheet);
+
+  const { control, reset, handleSubmit, setValue, watch } =
+    useForm<EnrollmentParams>({
+      defaultValues: {
+        search: "",
+        path: "",
+        wave: "",
+        status: "",
+      },
+    });
 
   const onFiltering = (data: EnrollmentParams) => {
     listEnrollmentApi(data).catch(() => {});
@@ -77,6 +81,15 @@ export default function Enrollment() {
     tableRef.current?.scrollTo({ top: 0 });
     handleSubmit((data) => onFiltering({ ...data, skip, take }))();
   };
+
+  // const handleDownloadSheet = () => {
+  //   downloadSheetApi({
+  //     path: watch("path"),
+  //     wave: watch("wave"),
+  //     status: watch("status"),
+  //     search: watch("search"),
+  //   }).catch(() => {});
+  // };
 
   useEffect(() => {
     setActive("Pendaftar");
@@ -196,6 +209,19 @@ export default function Enrollment() {
         >
           Reset
         </Button>
+        <a
+          target="_blank"
+          href={`${
+            import.meta.env.VITE_BACKEND_URL
+          }/enrollment/list/sheet?path=${watch("path")}&wave=${watch(
+            "wave"
+          )}&status=${watch("status")}&search=${watch("search")}`}
+        >
+          <Button
+            coloring="success"
+            left={() => <FaFileDownload className="text-xl" />}
+          ></Button>
+        </a>
       </div>
       {!listEnrollmentApi.loading && !listEnrollmentApi.data?.rows?.length ? (
         <NotFound />
@@ -247,7 +273,7 @@ export default function Enrollment() {
                           : item.status === "REJECTED" ||
                             item.status === "PAYMENT_PENDING"
                           ? "text-danger-600 bg-danger-100"
-                          : ""
+                          : "text-warning-600 bg-warning-100"
                       }`}
                     >
                       {item.status === "ACCEPTED"
@@ -257,7 +283,7 @@ export default function Enrollment() {
                         : item.status === "REJECTED"
                         ? "Ditolak"
                         : item.status === "DRAFT"
-                        ? "Belum Disubmit"
+                        ? "Belum Submit"
                         : item.status === "PAYMENT_PENDING"
                         ? "Belum Bayar"
                         : ""}
