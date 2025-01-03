@@ -10,7 +10,19 @@ export default class Enrollment extends Base {
   code!: string;
 
   @Expose()
+  avatar?: string;
+
+  @Expose()
+  name?: string;
+
+  @Expose()
   email!: number;
+
+  @Expose()
+  regNumber?: string;
+
+  @Expose()
+  whatsapp?: string;
 
   @Expose()
   status!: "PAYMENT_PENDING" | "DRAFT" | "SUBMITTED" | "ACCEPTED" | "REJECTED";

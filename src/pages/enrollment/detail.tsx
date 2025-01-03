@@ -58,7 +58,7 @@ export default function EnrollmentDetail() {
         </div>
         <div className="flex-1">
           <div className="font-bold text-xl text-neutral-900 font-ubuntu">
-            {getEnrollmentApi.data?.code}
+            {getEnrollmentApi.data?.name}
           </div>
           <div className="mt-1">{getEnrollmentApi.data?.email}</div>
         </div>

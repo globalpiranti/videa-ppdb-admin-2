@@ -70,6 +70,8 @@ export default function Card() {
     templatesApi({}).catch(() => {});
   }, []);
 
+  console.log(watch());
+
   return (
     <div className="flex justify-start items-start space-x-5 p-5">
       <div className="w-2/5 bg-white border border-neutral-300 rounded">

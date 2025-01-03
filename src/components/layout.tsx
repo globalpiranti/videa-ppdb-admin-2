@@ -7,15 +7,36 @@ import { LayoutContext } from "../hooks/layout";
 import useUser from "../hooks/user";
 import menus from "../menu";
 import useSwal from "../hooks/swal";
+import useApi from "../hooks/api";
+import { listPayment } from "../api/endpoints/payment";
+import { listEnrollment } from "../api/endpoints/enrollment";
 
 export default function Layout() {
   const [title, setTitle] = useState<string>();
-  const { validate, context, logout } = useUser();
   const [active, setActive] = useState<string>("Dashboard");
+  const { validate, context, logout } = useUser();
+  const listPaymentApi = useApi(listPayment);
+  const listEnrollmentApi = useApi(listEnrollment);
+  const [needAction, setNeedAction] = useState({ enroll: 0, payment: 0 });
   const swal = useSwal();
 
   useEffect(() => {
-    validate();
+    validate().then(() => {
+      listEnrollmentApi({}).then((res) => {
+        setNeedAction({
+          ...needAction,
+          enroll: res.rows.filter((item) => item.status === "SUBMITTED").length,
+        });
+      });
+
+      listPaymentApi({}).then((res) => {
+        setNeedAction({
+          ...needAction,
+          payment: res.filter((item) => item.status === "WAITING_CONFIRMATION")
+            .length,
+        });
+      });
+    });
   }, []);
 
   if (!context.user) return null;
@@ -37,7 +58,7 @@ export default function Layout() {
                 active === title
                   ? "bg-primary-700"
                   : "bg-white hover:bg-neutral-200"
-              } font-ubuntu flex justify-start items-center overflow-hidden group`}
+              } font-ubuntu flex justify-start relative items-center overflow-hidden group`}
               {...item}
             >
               <span
@@ -58,6 +79,22 @@ export default function Layout() {
               >
                 {title}
               </span>
+
+              {(title === "Pendaftar" || title === "Pembayaran") &&
+                needAction.enroll !== 0 &&
+                needAction.payment !== 0 && (
+                  <div
+                    className={`absolute text-sm w-[20px] h-[20px] font-semibold flex justify-center items-center rounded-full top-3 right-3 ${
+                      title === active
+                        ? "text-warning-500 border border-warning-500"
+                        : "text-primary-500 border border-primary-500"
+                    }`}
+                  >
+                    {title === "Pembayaran"
+                      ? needAction.payment
+                      : needAction.enroll}
+                  </div>
+                )}
             </Link>
           ))}
         </div>

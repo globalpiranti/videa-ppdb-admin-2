@@ -53,7 +53,7 @@ export default function SelectInput({
     <components.Menu
       {...rest}
       getStyles={() => ({})}
-      className="p-1 bg-white rounded border border-neutral-400 absolute z-10 w-full mt-1"
+      className="p-1 bg-white rounded border border-neutral-400 absolute z-20 w-full mt-1"
     >
       {children}
     </components.Menu>

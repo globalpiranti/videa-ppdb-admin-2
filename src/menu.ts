@@ -1,5 +1,6 @@
 import { IconType } from "react-icons";
 import { FaRegUserCircle } from "react-icons/fa";
+import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineAnnouncement } from "react-icons/md";
 import {
   RiAppsLine,
@@ -56,6 +57,11 @@ const menus: (Menu & LinkProps)[] = [
     title: "Pengguna",
     icon: FaRegUserCircle,
     to: "/user",
+  },
+  {
+    title: "Pengaturan",
+    icon: IoSettingsOutline,
+    to: "/settings",
   },
 ];
 

@@ -1,26 +1,37 @@
 import { plainToInstance } from "class-transformer";
 import client from "../client";
 import Enrollment from "../models/enrollment";
+import { Row } from "../row";
+
+export type EnrollmentParams = {
+  search?: string;
+  path?: string;
+  wave?: string;
+  status?: string;
+  skip?: number;
+  take?: number;
+};
 
 export const listEnrollment = ({
   skip,
   take,
-}: {
-  skip?: number;
-  take?: number;
-}) =>
+  status,
+  search,
+  path,
+  wave,
+}: EnrollmentParams): Promise<Row<Enrollment>> =>
   client
     .get("/enrollment", {
       params: {
         skip,
         take,
+        status,
+        search,
+        path,
+        wave,
       },
     })
-    .then(({ data }): Enrollment[] =>
-      (data as unknown[]).map((item) =>
-        plainToInstance(Enrollment, item, { excludeExtraneousValues: true })
-      )
-    );
+    .then(({ data }) => data);
 
 export const getEnrollment = (id: string) =>
   client

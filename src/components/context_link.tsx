@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { IconType } from "react-icons";
 import { Link, LinkProps } from "react-router-dom";
 
@@ -8,7 +9,7 @@ export default function ContextLink({
   ...props
 }: {
   icon: IconType;
-  children: string;
+  children: string | ReactNode;
 } & LinkProps) {
   return (
     <Link

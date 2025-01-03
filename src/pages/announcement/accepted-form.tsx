@@ -100,6 +100,7 @@ const Accepted = () => {
                   onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
                     onChange(e.target.value);
                   }}
+                  rows={5}
                 />
               )}
             />

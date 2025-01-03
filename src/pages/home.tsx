@@ -130,7 +130,7 @@ export default function Home() {
             defer
           >
             <div className="flex-1">
-              {listEnrollmentApi.data?.map((item, index) => {
+              {(listEnrollmentApi.data?.rows || [])?.map((item, index) => {
                 const Render = presentationMap[item.form[0].input];
                 return (
                   <div

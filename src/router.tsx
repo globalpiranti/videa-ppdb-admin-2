@@ -16,6 +16,7 @@ import SendEmail from "./pages/reset-password/send-email";
 import ResetPassword from "./pages/reset-password";
 import Announcement from "./pages/announcement";
 import User from "./pages/user";
+import Settings from "./pages/settings";
 
 export const router = createBrowserRouter(
   [
@@ -94,6 +95,10 @@ export const router = createBrowserRouter(
         {
           path: "user",
           element: <User />,
+        },
+        {
+          path: "settings",
+          element: <Settings />,
         },
       ],
     },

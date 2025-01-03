@@ -67,7 +67,6 @@ export default function Form() {
             <FormList
               id={`${item.id}`}
               title={item.name}
-              created={item.createdAt}
               key={`${item.id}`}
               onDelete={onDelete}
             />

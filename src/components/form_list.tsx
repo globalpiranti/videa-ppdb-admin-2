@@ -1,4 +1,3 @@
-import { Moment } from "moment";
 import { BiDotsVertical } from "react-icons/bi";
 import {
   RiDeleteBin4Fill,
@@ -14,12 +13,10 @@ import ContextLink from "./context_link";
 export default function FormList({
   id,
   title,
-  created,
   onDelete,
 }: {
   id: string;
   title: string;
-  created: Moment;
   onDelete: (id: string) => void;
 }) {
   return (
@@ -31,10 +28,11 @@ export default function FormList({
         <div className="flex-1">
           <div className="font-medium font-ubuntu">{title}</div>
           <div className="flex justify-start items-center space-x-1 mt-0.5">
-            <RiPagesLine className="text-primary-700" />
-            <span className="font-light text-sm">
-              {created.format("DD/MM/YYYY HH.mm")}
-            </span>
+            <Link to={`/form/${id}/card`}>
+              <button className="text-sm line-clamp-1 bg-primary-600 text-white px-2 py-1 rounded mt-2">
+                Desain Kartu Peserta
+              </button>
+            </Link>
           </div>
         </div>
         <Popup
@@ -55,8 +53,8 @@ export default function FormList({
           >
             Buka di tab baru
           </ContextLink>
-          <ContextLink to={`/form/${id}/card`} icon={RiIdCardFill}>
-            Desain Kartu Peserta
+          <ContextLink to={`/form/${id}`} icon={RiIdCardFill}>
+            Edit Form
           </ContextLink>
           <ContextLink
             to="/"
@@ -70,10 +68,6 @@ export default function FormList({
           </ContextLink>
         </Popup>
       </div>
-      <Link
-        to={`/form/${id}`}
-        className="absolute top-0 left-0 w-full h-full"
-      ></Link>
     </div>
   );
 }
