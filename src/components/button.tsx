@@ -5,6 +5,7 @@ type ButtonProps = {
   sizing?: keyof typeof sizingStyles;
   coloring?: keyof typeof coloringStyles;
   left?: FC;
+  right?: FC;
 };
 
 const sizes = ["sm", "base"] as const;
@@ -28,6 +29,7 @@ export default function Button({
   children,
   sizing = "base",
   left: Left,
+  right: Right,
   className,
   coloring = "primary",
   ...props
@@ -43,7 +45,8 @@ export default function Button({
         <div className="loader"></div>
       ) : (
         <>
-          {Left && <Left />} {children && <span>{children}</span>}
+          {Left && <Left />} {children && <span>{children}</span>}{" "}
+          {Right && <Right />}
         </>
       )}
     </button>

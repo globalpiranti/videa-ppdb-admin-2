@@ -167,38 +167,46 @@ export default function Home() {
             </Link>
           </div>
           <div className="flex-1">
-            {listPaymentApi.data?.map((item, index) => (
-              <List
-                key={`${index}`}
-                icon={PiReceiptDuotone}
-                details={[
-                  {
-                    className: "w-[25%]",
-                    element: item.createdAt.format("DD MMMM YYYY HH:mm"),
-                  },
-                  {
-                    className: "w-[15%]",
-                    element: (
-                      <NumericFormat
-                        value={item.amount}
-                        prefix="Rp"
-                        thousandSeparator=","
-                        displayType="text"
-                      />
-                    ),
-                  },
-                  {
-                    className: `w-[15%] text-right ${
-                      statusMap[item.status].color
-                    }`,
-                    element: statusMap[item.status].as,
-                  },
-                ]}
-                to={`/payment/${item.id}`}
-              >
-                {item.invoiceNumber}
-              </List>
-            ))}
+            {(
+              ((listPaymentApi.data?.rows || []).length > 0 &&
+                listPaymentApi.data?.rows) ||
+              []
+            )?.map((item, index) => {
+              return (
+                <List
+                  key={`${index}`}
+                  icon={PiReceiptDuotone}
+                  details={[
+                    {
+                      className: "w-[25%]",
+                      element: moment(item.createdAt).format(
+                        "DD MMMM YYYY HH:mm"
+                      ),
+                    },
+                    {
+                      className: "w-[15%]",
+                      element: (
+                        <NumericFormat
+                          value={item.amount}
+                          prefix="Rp"
+                          thousandSeparator=","
+                          displayType="text"
+                        />
+                      ),
+                    },
+                    {
+                      className: `w-[15%] text-right ${
+                        statusMap[item.status].color
+                      }`,
+                      element: statusMap[item.status].as,
+                    },
+                  ]}
+                  to={`/payment/${item.id}`}
+                >
+                  {item.invoiceNumber}
+                </List>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import { BiDownload, BiUser } from "react-icons/bi";
 import { CgSearch } from "react-icons/cg";
 import {
-  EnrollmentParams,
+  FilteringParams,
   listEnrollment,
 } from "../../api/endpoints/enrollment";
 import Attachment from "../../api/models/attachment";
@@ -57,8 +57,8 @@ export default function Enrollment() {
   const listWavesApi = useApi(listWave);
   // const downloadSheetApi = useApi(getEnrollmentSheet);
 
-  const { control, reset, handleSubmit, setValue, watch } =
-    useForm<EnrollmentParams>({
+  const { control, reset, handleSubmit, watch, setValue } =
+    useForm<FilteringParams>({
       defaultValues: {
         search: "",
         path: "",
@@ -67,11 +67,13 @@ export default function Enrollment() {
       },
     });
 
-  const onFiltering = (data: EnrollmentParams) => {
-    listEnrollmentApi(data).catch(() => {});
-    if (data.path && data.path !== "") {
-      listWavesApi(data.path).catch(() => {});
-    }
+  const onFiltering = (data: FilteringParams) => {
+    setTimeout(() => {
+      listEnrollmentApi(data).catch(() => {});
+      if (data.path && data.path !== "") {
+        listWavesApi(data.path).catch(() => {});
+      }
+    }, 500);
   };
 
   const handlePageClick = (selectedItem: { selected: number }) => {
@@ -142,6 +144,7 @@ export default function Enrollment() {
                   .reverse() ?? []
               }
               onChange={(val) => {
+                setValue("wave", "");
                 onChange((val as OptionType).value);
                 handleSubmit(onFiltering)();
               }}
@@ -155,7 +158,7 @@ export default function Enrollment() {
           rules={{ required: false }}
           render={({ field: { value, onChange } }) => (
             <SelectInput
-              placeholder="Gelombang"
+              placeholder="Semua Gelombang"
               value={value}
               options={
                 listWavesApi.data
@@ -169,7 +172,6 @@ export default function Enrollment() {
                   .reverse() ?? []
               }
               onChange={(val) => {
-                setValue("wave", "");
                 onChange((val as OptionType).value);
                 handleSubmit(onFiltering)();
               }}
@@ -182,11 +184,14 @@ export default function Enrollment() {
           rules={{ required: false }}
           render={({ field: { value, onChange } }) => (
             <SelectInput
-              placeholder="Sudah Bayar"
               value={value}
               options={[
-                { label: "Sudah Bayar", value: "" },
+                { label: "Semua (Sudah Bayar)", value: "" },
                 { label: "Belum Bayar", value: "PAYMENT_PENDING" },
+                { label: "Belum Submit", value: "DRAFT" },
+                { label: "Belum Diperiksa", value: "SUBMITTED" },
+                { label: "Diterima", value: "ACCEPTED" },
+                { label: "Ditolak", value: "REJECTED" },
               ]}
               onChange={(val) => {
                 onChange((val as OptionType).value);
@@ -228,9 +233,9 @@ export default function Enrollment() {
       ) : (
         <div
           ref={tableRef}
-          className="w-[calc(100%-40px)] h-screen overflow-y-auto bg-white pb-52 mx-4"
+          className="w-[calc(100%-40px)] h-screen overflow-y-auto bg-white border border-neutral-400 pb-52 mx-4"
         >
-          <div className="grid grid-cols-6 p-3 bg-neutral-200 sticky top-0 z-10 border-neutral-400 border font-semibold pl-4 items-center w-full">
+          <div className="grid grid-cols-6 p-3 bg-neutral-200 sticky top-0 z-10 border-neutral-400 border-b font-semibold pl-4 items-center w-full">
             <div>#</div>
             <div>Nama Pendaftar</div>
             <div>No Registrasi</div>
@@ -238,6 +243,13 @@ export default function Enrollment() {
             <div>Status</div>
             <div>Aksi</div>
           </div>
+          {listEnrollmentApi.loading && (
+            <div className="flex justify-center items-center h-full">
+              <div className="px-10 py-3 text-neutral-800">
+                <div className="loader" />
+              </div>
+            </div>
+          )}
           {(listEnrollmentApi.data?.rows || [])?.map((item, index) => (
             <ListWithHeader
               key={`${index}`}

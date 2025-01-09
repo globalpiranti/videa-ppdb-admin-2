@@ -17,6 +17,8 @@ import ResetPassword from "./pages/reset-password";
 import Announcement from "./pages/announcement";
 import User from "./pages/user";
 import Settings from "./pages/settings";
+import Exam from "./pages/exam";
+import ExamDetail from "./pages/exam/detail";
 
 export const router = createBrowserRouter(
   [
@@ -53,6 +55,20 @@ export const router = createBrowserRouter(
             {
               path: ":id",
               element: <PathDetail />,
+            },
+          ],
+        },
+        {
+          path: "exam",
+          children: [
+            {
+              path: "",
+              element: <Exam />,
+              index: true,
+            },
+            {
+              path: "create",
+              element: <ExamDetail />,
             },
           ],
         },

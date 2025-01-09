@@ -97,7 +97,14 @@ export default function PaymentDetail() {
 
   return (
     <>
-      <div className="p-5 bg-white border-b border-neutral-300 flex justify-start items-center space-x-5">
+      <div className="p-5 relative bg-white border-b border-neutral-300 flex justify-start items-center space-x-5">
+        {getPaymentApi.loading && (
+          <div className="flex w-full z-10 h-screen absolute top-0 left-0 bg-white/80 justify-center items-center">
+            <div className="px-10 py-3 text-neutral-800">
+              <div className="loader" />
+            </div>
+          </div>
+        )}
         <div className="w-16 h-16 bg-neutral-300 rounded flex justify-center items-center text-4xl border border-neutral-400">
           <PiReceiptDuotone />
         </div>

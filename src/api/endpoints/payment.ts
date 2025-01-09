@@ -1,20 +1,29 @@
 import { plainToInstance } from "class-transformer";
 import client from "../client";
 import Payment from "../models/payment";
+import { Row } from "../row";
 
-export const listPayment = ({ skip, take }: { skip?: number; take?: number }) =>
+export const listPayment = ({
+  skip,
+  take,
+  search,
+  status,
+}: {
+  skip?: number;
+  take?: number;
+  search?: string;
+  status?: string;
+}): Promise<Row<Payment>> =>
   client
     .get("/payment", {
       params: {
         skip,
         take,
+        search,
+        status,
       },
     })
-    .then(({ data }): Payment[] =>
-      (data as unknown[]).map((item) =>
-        plainToInstance(Payment, item, { excludeExtraneousValues: true })
-      )
-    );
+    .then(({ data }) => data);
 
 export const getPayment = (id: string) =>
   client

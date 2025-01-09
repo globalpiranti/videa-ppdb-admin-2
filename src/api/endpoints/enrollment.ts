@@ -3,7 +3,7 @@ import client from "../client";
 import Enrollment from "../models/enrollment";
 import { Row } from "../row";
 
-export type EnrollmentParams = {
+export type FilteringParams = {
   search?: string;
   path?: string;
   wave?: string;
@@ -20,7 +20,7 @@ export const listEnrollment = ({
   search,
   path,
   wave,
-}: EnrollmentParams): Promise<Row<Enrollment>> =>
+}: FilteringParams): Promise<Row<Enrollment>> =>
   client
     .get("/enrollment", {
       params: {
@@ -44,6 +44,13 @@ export const getEnrollment = (id: string) =>
 export const acceptEnrollment = (id: string) =>
   client
     .patch(`/enrollment/${id}/accept`)
+    .then(({ data }) =>
+      plainToInstance(Enrollment, data, { excludeExtraneousValues: true })
+    );
+
+export const updateEnrollment = (id: string) =>
+  client
+    .patch(`/enrollment/${id}/update`)
     .then(({ data }) =>
       plainToInstance(Enrollment, data, { excludeExtraneousValues: true })
     );

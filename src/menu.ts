@@ -2,6 +2,7 @@ import { IconType } from "react-icons";
 import { FaRegUserCircle } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineAnnouncement } from "react-icons/md";
+import { PiExam } from "react-icons/pi";
 import {
   RiAppsLine,
   RiBankCard2Line,
@@ -27,6 +28,11 @@ const menus: (Menu & LinkProps)[] = [
     title: "Formulir",
     icon: RiFileCheckLine,
     to: "/form",
+  },
+  {
+    title: "Soal Ujian",
+    icon: PiExam,
+    to: "/exam",
   },
   {
     title: "Jalur Pendaftaran",
