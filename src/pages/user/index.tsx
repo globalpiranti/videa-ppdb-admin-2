@@ -20,6 +20,7 @@ import ContextLink from "../../components/context_link";
 import useSwal from "../../hooks/swal";
 import { useForm } from "react-hook-form";
 import User from "../../api/models/user";
+import ListWithHeader from "../../components/listwith_header";
 
 const UserManagement = () => {
   const { setActive, setTitle } = useLayout();
@@ -112,7 +113,7 @@ const UserManagement = () => {
         <NotFound />
       ) : (
         usersApi.data?.map((item, index) => (
-          <List
+          <ListWithHeader
             onClick={() => {
               reset(item);
               composeModal.state.set(item.id);
@@ -160,9 +161,7 @@ const UserManagement = () => {
               </>
             }
             key={`${index}`}
-          >
-            {item.fullname}
-          </List>
+          />
         ))
       )}
 

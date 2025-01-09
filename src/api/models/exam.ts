@@ -3,11 +3,10 @@ import Base from "./base";
 import moment, { type Moment } from "moment";
 import ExamWork from "./exam_work";
 import Path from "./path";
-import Attachment './attachment'
+import Attachment from "./attachment";
 
 export type ExamForm = {
   type: "multiple_choice" | "essay";
-  pdf: Attachment
   choices: string[];
   answer?: number;
   point?: number;
@@ -21,10 +20,13 @@ export default class Exam extends Base {
   forms!: ExamForm[];
 
   @Expose()
+  pdf!: Attachment;
+
+  @Expose()
   works?: ExamWork[];
 
   @Expose()
-  path!: Path;
+  paths!: Path[];
 
   @Expose()
   @Type(() => Date)

@@ -1,17 +1,43 @@
 import { useEffect } from "react";
 import useLayout from "../../hooks/layout";
 import Button from "../../components/button";
-import ListWithHeader from "../../components/ListWithHeader";
+import ListWithHeader from "../../components/listwith_header";
 import useApi from "../../hooks/api";
-import { examList } from "../../api/endpoints/exam";
+import { deleteExam, examList } from "../../api/endpoints/exam";
 import { PiExam } from "react-icons/pi";
 import NotFound from "../../components/not_found";
 import { useNavigate } from "react-router-dom";
+import ContextLink from "../../components/context_link";
+import { RiDeleteBin4Fill } from "react-icons/ri";
+import useSwal from "../../hooks/swal";
+import { BiDotsVertical } from "react-icons/bi";
+import Popup from "reactjs-popup";
 
 const Exam = () => {
   const { setActive, setTitle } = useLayout();
-  const listExamApi = useApi(examList);
   const navigate = useNavigate();
+  const swal = useSwal();
+  const listExamApi = useApi(examList);
+  const deleteExamApi = useApi(deleteExam);
+
+  const onDelete = (id: string, name: string) => {
+    swal({
+      title: "Apakah anda yakin?",
+      text: "Anda akan menghapus soal ujian " + name,
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "Batal",
+      confirmButtonText: "Hapus",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        deleteExamApi(id)
+          .then(() => {
+            listExamApi({}).catch(() => {});
+          })
+          .catch(() => {});
+      }
+    });
+  };
 
   useEffect(() => {
     setTitle("Soal Ujian");
@@ -40,7 +66,7 @@ const Exam = () => {
           <div>Berakhir Pada</div>
           <div>Aksi</div>
         </div>
-        {listExamApi.loading && (
+        {(listExamApi.loading || deleteExamApi.loading) && (
           <div className="flex justify-center items-center h-full">
             <div className="px-10 py-3 text-neutral-800">
               <div className="loader" />
@@ -59,17 +85,44 @@ const Exam = () => {
               {
                 element: (
                   <div className="flex gap-2 items-center">
-                    <span className="text-lg">index + 1</span>
+                    <span className="text-lg font-semibold">{index + 1}.</span>
                   </div>
                 ),
               },
               { element: item.name },
-              { element: item.path.name },
-              { element: item.startAt.format("DD-MM-YYYY") },
-              { element: item.finishAt.format("DD-MM-YYYY") },
+              { element: item.paths.map((path) => path.name).join(", ") },
+              { element: item.startAt.format("DD/MM/YYYY HH:mm") },
+              { element: item.finishAt.format("DD/MM/YYYY HH:mm") },
+              {
+                element: (
+                  <Popup
+                    trigger={
+                      <button
+                        type="button"
+                        className="p-2 -mr-4 -mb-2 relative z-10 bg-transparent hover:bg-primary-200 rounded-full"
+                      >
+                        <BiDotsVertical />
+                      </button>
+                    }
+                    position="left top"
+                  >
+                    <ContextLink
+                      className="text-danger-600"
+                      to="/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onDelete(item.id, item.name);
+                      }}
+                      icon={RiDeleteBin4Fill}
+                    >
+                      Hapus
+                    </ContextLink>
+                  </Popup>
+                ),
+              },
             ]}
             icon={PiExam}
-            to={`/enrollment/${item.id}`}
+            to={`${item.id}`}
           />
         ))}
       </div>

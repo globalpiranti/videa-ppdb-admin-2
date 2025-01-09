@@ -11,16 +11,23 @@ export const examList = () =>
       )
     );
 
+export const examDetail = (id: string) =>
+  client
+    .get(`/exam/${id}`)
+    .then(({ data }) =>
+      plainToInstance(Exam, data, { excludeExtraneousValues: true })
+    );
+
 export const createExam = (data: Exam) =>
   client
-    .post("/exam", { ...instanceToPlain(data), path: data.path?.id })
+    .post("/exam", instanceToPlain(data))
     .then(({ data }) =>
       plainToInstance(Exam, data, { excludeExtraneousValues: true })
     );
 
 export const updateExam = (data: Exam) =>
   client
-    .put(`/exam/${data.id}`, { ...instanceToPlain(data), path: data.path?.id })
+    .put(`/exam/${data.id}`, instanceToPlain(data))
     .then(({ data }) =>
       plainToInstance(Exam, data, { excludeExtraneousValues: true })
     );

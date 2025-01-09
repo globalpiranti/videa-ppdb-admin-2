@@ -12,7 +12,7 @@ import NotFound from "../../components/not_found";
 import TextInput from "../../components/text_input";
 import useApi from "../../hooks/api";
 import useLayout from "../../hooks/layout";
-import ListWithHeader from "../../components/ListWithHeader";
+import ListWithHeader from "../../components/listwith_header";
 import SelectInput, { OptionType } from "../../components/select_input";
 import { listPath } from "../../api/endpoints/path";
 import { Controller, useForm } from "react-hook-form";

@@ -70,6 +70,10 @@ export const router = createBrowserRouter(
               path: "create",
               element: <ExamDetail />,
             },
+            {
+              path: ":id",
+              element: <ExamDetail />,
+            },
           ],
         },
         {

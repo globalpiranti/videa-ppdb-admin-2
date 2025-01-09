@@ -30,14 +30,14 @@ const menus: (Menu & LinkProps)[] = [
     to: "/form",
   },
   {
-    title: "Soal Ujian",
-    icon: PiExam,
-    to: "/exam",
-  },
-  {
     title: "Jalur Pendaftaran",
     icon: RiGitBranchLine,
     to: "/path",
+  },
+  {
+    title: "Soal Ujian",
+    icon: PiExam,
+    to: "/exam",
   },
   {
     title: "Pendaftar",
